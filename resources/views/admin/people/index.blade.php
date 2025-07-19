@@ -5,32 +5,22 @@
   <div class="card shadow border-0 rounded-5 overflow-hidden">
 
     {{-- ✅ HEADER --}}
-    <div class="p-4 d-flex align-items-center justify-content-between" style="background: linear-gradient(to right, #00b09b, #96c93d); color: white;">
-      <div class="d-flex align-items-center">
-        <i class="bi bi-people-fill fs-3 me-3 text-white"></i>
-        <h3 class="mb-0 fw-bold text-white">People List</h3>
-      </div>
-      <a href="{{ route('admin.people.create') }}" class="btn btn-light text-success fw-semibold rounded-3 shadow-sm">
-        <i class="bi bi-person-plus-fill me-1"></i> Add New Person
-      </a>
+    <div class="p-4 d-flex align-items-center"
+         style="background: linear-gradient(to right, #00b09b, #96c93d); color: white;">
+      <i class="bi bi-people-fill fs-3 me-3 text-white"></i>
+      <h3 class="mb-0 fw-bold text-white">People List</h3>
     </div>
 
     {{-- ✅ BODY --}}
     <div class="card-body bg-white p-5">
 
-      {{-- Search --}}
-      <form method="GET" action="{{ route('admin.people.index') }}" class="row g-3 mb-4">
-        <div class="col-md-10">
-          <input type="text" name="search" class="form-control form-control-lg rounded-3 shadow-sm"
-                 placeholder="Search by name, unique ID, or company..."
-                 value="{{ request('search') }}">
+      {{-- Real-time Search --}}
+      <div class="row mb-4">
+        <div class="col-md-6">
+          <input type="text" id="searchInput" class="form-control form-control-lg rounded-3 shadow-sm"
+                 placeholder="🔍 Search by name...">
         </div>
-        <div class="col-md-2 d-grid">
-          <button type="submit" class="btn btn-success btn-lg shadow-sm">
-            <i class="bi bi-search me-1"></i> Search
-          </button>
-        </div>
-      </form>
+      </div>
 
       {{-- Success Message --}}
       @if(session('success'))
@@ -40,7 +30,7 @@
       {{-- Table --}}
       @if($people->count())
         <div class="table-responsive">
-          <table class="table table-bordered table-hover align-middle text-center">
+          <table class="table table-bordered table-hover align-middle text-center" id="peopleTable">
             <thead class="table-light">
               <tr>
                 <th>#</th>
@@ -56,7 +46,7 @@
               @foreach($people as $index => $person)
               <tr>
                 <td>{{ $index + 1 }}</td>
-                <td>{{ $person->name }}</td>
+                <td class="person-name">{{ $person->name }}</td>
                 <td>{{ $person->unique_id }}</td>
                 <td>{{ $person->gender }}</td>
                 <td>{{ $person->age }}</td>
@@ -84,7 +74,27 @@
         <p class="text-muted text-center fs-5">No people found.</p>
       @endif
 
+      {{-- ✅ Add New Person Button Below --}}
+      <div class="text-end mt-4">
+        <a href="{{ route('admin.people.create') }}" class="btn btn-success btn-lg shadow-sm rounded-3">
+          <i class="bi bi-person-plus-fill me-1"></i> Add New Person
+        </a>
+      </div>
+
     </div>
   </div>
 </div>
+
+{{-- ✅ JS for Live Filter --}}
+<script>
+  document.getElementById("searchInput").addEventListener("keyup", function () {
+    const input = this.value.toLowerCase();
+    const rows = document.querySelectorAll("#peopleTable tbody tr");
+
+    rows.forEach(row => {
+      const name = row.querySelector(".person-name").textContent.toLowerCase();
+      row.style.display = name.includes(input) ? "" : "none";
+    });
+  });
+</script>
 @endsection

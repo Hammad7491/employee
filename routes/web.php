@@ -5,12 +5,16 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\PersonController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\SocialController;
+use App\Http\Controllers\LandingController;
 
 
 use App\Http\Controllers\Admin\DashboardController;
 
 // Public
 Route::view('/', 'welcome');
+// Landing page + unique ID search
+Route::get('/', [LandingController::class, 'index']);
+Route::post('/search-person', [LandingController::class, 'searchPerson'])->name('search.person');
 
 Route::get('/login',      [AuthController::class, 'loginform'])->name('loginform');
 Route::post('/login',     [AuthController::class, 'login'])->name('login');

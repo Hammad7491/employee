@@ -70,24 +70,9 @@
             <form id="loginForm" action="{{ route('login') }}" method="POST">
                 @csrf
 
-                <div class="row mb-32">
-                    <div class="col-6">
-                        <a href="{{ route('google.login') }}" class="btn text-primary-600 border d-flex align-items-center justify-content-center w-100 gap-2">
-                            <iconify-icon icon="logos:google-icon" class="text-xl"></iconify-icon>
-                            Google
-                        </a>
-                    </div>
-                    <div class="col-6">
-                        <a href="{{ route('facebook.login') }}" class="btn text-primary-600 border d-flex align-items-center justify-content-center w-100 gap-2">
-                            <iconify-icon icon="ic:baseline-facebook" class="text-xl"></iconify-icon>
-                            Facebook
-                        </a>
-                    </div>
-                </div>
+             
 
-                <div class="center-border-horizontal text-center mb-32">
-                    <span class="bg-base z-1 px-4">or continue with email</span>
-                </div>
+                
 
                 <div class="icon-field mb-16">
                     <span class="icon top-50 translate-middle-y">
