@@ -11,6 +11,13 @@ class RolesAndPermissionsSeeder extends Seeder
 {
     public function run()
     {
+
+      
+
+$adminRole = Role::firstOrCreate(['name' => 'Admin']);
+$viewPeople = Permission::firstOrCreate(['name' => 'view people']);
+$adminRole->givePermissionTo($viewPeople);
+
         // reset cache
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 

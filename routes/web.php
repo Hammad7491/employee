@@ -2,16 +2,12 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\Admin\RoleController;
-use App\Http\Controllers\Admin\SiteController;
+use App\Http\Controllers\Admin\PersonController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\SocialController;
-use App\Http\Controllers\Admin\ClientController;
+
+
 use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Chatbot\ChatbotController;
-use App\Http\Controllers\Admin\PermissionController;
-use App\Http\Controllers\Chatbot\UserNameController;
-use App\Http\Controllers\Admin\PurchaseOrderController;
 
 // Public
 Route::view('/', 'welcome');
@@ -32,38 +28,23 @@ Route::get('login/facebook/callback', [SocialController::class, 'handleFacebookC
 // Authenticated
 Route::middleware('auth')->group(function () {
 
+    // Admin area
+    Route::prefix('admin')
+        ->name('admin.')
+        ->group(function () {
 
+            // Dashboard
+            Route::resource('dashboard', DashboardController::class)
+                ->only('index')
+                ->names(['index' => 'dashboard'])
+                ->middleware('can:view dashboard');
 
-     // Admin area
-     Route::prefix('admin')
-          ->name('admin.')
-          ->group(function () {
+            // Users
+            Route::resource('users', UserController::class)
+                ->middleware('can:view users');
 
-
-
-
-               Route::resource('clients', ClientController::class)
-                    ->middleware('can:view clients');
-
-               // Dashboard (single index action)
-               Route::resource('dashboard', DashboardController::class)
-                    ->only('index')
-                    ->names(['index' => 'dashboard'])
-                    ->middleware('can:view dashboard');
-
-        
-               Route::resource('users', UserController::class)
-
-                    ->middleware('can:view users');
-
-               // Roles CRUD
-               Route::resource('roles', RoleController::class)
-
-                    ->middleware('can:view roles');
-
-               // Permissions CRUD
-               Route::resource('permissions', PermissionController::class)
-
-                    ->middleware('can:view permissions');
-          });
+            // People CRUD (new section)
+            Route::resource('people', \App\Http\Controllers\Admin\PeopleController::class)
+                ->middleware('can:view people');
+        });
 });

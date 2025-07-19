@@ -38,24 +38,17 @@
                     <span>User Management</span>
                 </a>
                 <ul class="sidebar-submenu">
-                    <li>
-                        <a href="{{ route('admin.users.create') }}">
-                            <i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Add Users
+                   
+
+                      <li>
+                        <a href="{{ route('admin.people.create') }}">
+                            <i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Add People
                         </a>
                     </li>
-                    <li>
-                        <a href="{{ route('admin.users.index') }}">
-                            <i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Users List
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('admin.roles.index') }}">
-                            <i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Roles & Permissions
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('admin.permissions.index') }}">
-                            <i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Permissions
+
+                     <li>
+                        <a href="{{ route('admin.people.index') }}">
+                            <i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> People lists
                         </a>
                     </li>
                 </ul>
@@ -66,12 +59,7 @@
 
   
 
-            <li>
-                <a href="email.html">
-                    <iconify-icon icon="mage:email" class="menu-icon"></iconify-icon>
-                    <span>Email</span>
-                </a>
-            </li>
+           
 
 
 
