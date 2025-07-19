@@ -16,6 +16,8 @@ Route::view('/', 'welcome');
 Route::get('/', [LandingController::class, 'index']);
 Route::post('/search-person', [LandingController::class, 'searchPerson'])->name('search.person');
 
+
+
 Route::get('/login',      [AuthController::class, 'loginform'])->name('loginform');
 Route::post('/login',     [AuthController::class, 'login'])->name('login');
 Route::get('/register',   [AuthController::class, 'registerform'])->name('registerform');
@@ -37,6 +39,9 @@ Route::middleware('auth')->group(function () {
         ->name('admin.')
         ->group(function () {
 
+
+          Route::get('change-password', [UserController::class, 'showChangePasswordForm'])->name('change-password.form');
+    Route::post('change-password', [UserController::class, 'updatePassword'])->name('change-password.update');
             // Dashboard
             Route::resource('dashboard', DashboardController::class)
                 ->only('index')
