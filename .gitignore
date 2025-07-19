@@ -12,7 +12,7 @@ public/hot
 public_html/hot
 
 storage/*.key
-Homestead.yaml
+Homestead.yamla
 Homestead.json
 /.vagrant
 .phpunit.result.cache
