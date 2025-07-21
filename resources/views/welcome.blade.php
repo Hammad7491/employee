@@ -6,11 +6,20 @@
   <title>CNP Verification - Personal Numeric Code Validation</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
+    html, body {
+      height: 100%;
+    }
     body {
       background-color: #f8f9fa;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      flex-direction: column;
     }
-    .container { max-width: 900px; margin-top: 60px; }
+    .container {
+      max-width: 900px;
+      margin-top: 20px;
+      flex: 1;
+    }
     .code-box {
       background-color: #fff;
       border: 1px solid #dee2e6;
@@ -39,20 +48,30 @@
       border-radius: 4px;
       display: inline-block;
     }
-    h2, h4 { color: #2c3e50; }
+    h2, h4 {
+      color: #2c3e50;
+    }
     .info-table td {
       padding: 8px 12px;
       border-bottom: 1px solid #dee2e6;
     }
-    .info-table td:first-child { font-weight: 600; }
+    .info-table td:first-child {
+      font-weight: 600;
+    }
   </style>
 </head>
 <body>
+
+  <!-- Login button top-right -->
+  <div class="d-flex justify-content-end p-3">
+    <a href="{{ route('loginform') }}" class="btn btn-outline-primary btn-sm">Login</a>
+  </div>
+
   <div class="container">
     <h2 class="text-center mb-4">CNP Verification - Personal Numeric Code Validation</h2>
 
     <div class="code-box">
-      <form method="POST" action="{{ route('search.person') }}" id="cnpForm">
+      <form method="POST" action="{{ route('search.person') }}">
         @csrf
         <div class="mb-3">
           <label class="form-label">🔍 CNP to be validated *</label>
@@ -64,8 +83,8 @@
                  required
                  inputmode="numeric"
                  pattern="[0-9]*"
+                 value="{{ old('unique_id', session('entered_cnp') ?? '') }}"
                  oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 13);"
-                 id="cnpInput"
           >
         </div>
         <button type="submit" class="btn btn-primary">Validate your CNP</button>
@@ -98,10 +117,6 @@
         <tr><td>Control code:</td><td>{{ session('cnp_data.control_code') }}</td></tr>
       </table>
     </div>
-    @elseif(session('verified'))
-    <div class="result-box">
-      <h4 class="text-success">✅ Verified</h4>
-    </div>
     @endif
 
     <hr class="my-5">
@@ -132,13 +147,11 @@
     </table>
   </div>
 
-  <script>
-    // Clear input after form is submitted
-    const form = document.getElementById('cnpForm');
-    const input = document.getElementById('cnpInput');
-    form.addEventListener('submit', function () {
-      setTimeout(() => input.value = '', 150);
-    });
-  </script>
+  <!-- Footer -->
+  <footer class="bg-dark text-light text-center py-3">
+    © 2025 CNP Generator – Site made by 
+    <a href="mailto:madi.rock7491@gmail.com" class="text-info text-decoration-none">Hammad</a>
+  </footer>
+
 </body>
 </html>

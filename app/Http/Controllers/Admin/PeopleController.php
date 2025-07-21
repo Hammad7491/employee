@@ -96,70 +96,79 @@ class PeopleController extends Controller
 
     // Search from landing page
     public function search(Request $request)
-    {
-        $cnp = $request->input('unique_id');
+{
+    $cnp = $request->input('unique_id');
 
-        if (strlen($cnp) !== 13 || !is_numeric($cnp)) {
-            $parsed = $this->parseCNP($cnp);
-            return back()->with('cnp_error', true)
-                         ->with('cnp_data', $parsed);
-        }
-
-        $user = Person::where('unique_id', $cnp)->first();
-
-        if ($user) {
-            $parsed = [
-                'sex' => $user->gender ?? 'N/A',
-                'year' => $user->year,
-                'month' => $user->month,
-                'day' => $user->day,
-                'county' => $user->county,
-                'registration_code' => $user->registration_code,
-                'control_code' => $user->control_code,
-            ];
-            return back()->with('cnp_data', $parsed);
-        } else {
-            return back()->with('verified', true);
-        }
+    // Invalid CNP: not 13 digits or non-numeric
+    if (strlen($cnp) !== 13 || !is_numeric($cnp)) {
+        $parsed = $this->parseCNP($cnp);
+        return back()
+            ->with('cnp_error', true)
+            ->with('entered_cnp', $cnp)
+            ->with('cnp_data', $parsed);
     }
+
+    // Check if CNP exists in DB
+    $user = Person::where('unique_id', $cnp)->first();
+
+    if ($user) {
+        $parsed = [
+            'sex' => $user->gender ?? 'N/A',
+            'year' => $user->year,
+            'month' => $user->month,
+            'day' => $user->day,
+            'county' => $user->county,
+            'registration_code' => $user->registration_code,
+            'control_code' => $user->control_code,
+        ];
+        return back()
+            ->with('cnp_data', $parsed)
+            ->with('entered_cnp', $cnp);
+    } else {
+        return back()
+            ->with('verified', true)
+            ->with('entered_cnp', $cnp);
+    }
+}
 
     // Helper to parse incomplete/invalid CNP
     private function parseCNP($cnp)
-    {
-        $parsed = [
-            'sex' => 'Female',
-            'year' => 0,
-            'month' => 0,
-            'day' => 0,
-            'county' => '',
-            'registration_code' => '',
-            'control_code' => 0,
-        ];
+{
+    $cnp = str_pad(preg_replace('/\D/', '', $cnp), 13, '0', STR_PAD_RIGHT);
+    
+    $parsed = [
+        'sex' => 'Unknown',
+        'year' => 0,
+        'month' => 0,
+        'day' => 0,
+        'county' => '',
+        'registration_code' => '',
+        'control_code' => 0,
+    ];
 
-        $digits = str_split(str_pad($cnp, 13, '0', STR_PAD_RIGHT));
-
-        if (count($digits) >= 1) {
-            $parsed['sex'] = $digits[0] % 2 === 1 ? 'Male' : 'Female';
-        }
-        if (count($digits) >= 3) {
-            $parsed['year'] = intval($digits[1] . $digits[2]);
-        }
-        if (count($digits) >= 5) {
-            $parsed['month'] = intval($digits[3] . $digits[4]);
-        }
-        if (count($digits) >= 7) {
-            $parsed['day'] = intval($digits[5] . $digits[6]);
-        }
-        if (count($digits) >= 9) {
-            $parsed['county'] = $digits[7] . $digits[8];
-        }
-        if (count($digits) >= 12) {
-            $parsed['registration_code'] = $digits[9] . $digits[10] . $digits[11];
-        }
-        if (count($digits) >= 13) {
-            $parsed['control_code'] = $digits[12];
-        }
-
-        return $parsed;
+    if (strlen($cnp) >= 1) {
+        $parsed['sex'] = (int)$cnp[0] % 2 === 1 ? 'Male' : 'Female';
     }
+    if (strlen($cnp) >= 3) {
+        $parsed['year'] = (int)substr($cnp, 1, 2);
+    }
+    if (strlen($cnp) >= 5) {
+        $parsed['month'] = (int)substr($cnp, 3, 2);
+    }
+    if (strlen($cnp) >= 7) {
+        $parsed['day'] = (int)substr($cnp, 5, 2);
+    }
+    if (strlen($cnp) >= 9) {
+        $parsed['county'] = substr($cnp, 7, 2);
+    }
+    if (strlen($cnp) >= 12) {
+        $parsed['registration_code'] = substr($cnp, 9, 3);
+    }
+    if (strlen($cnp) === 13) {
+        $parsed['control_code'] = $cnp[12];
+    }
+
+    return $parsed;
+}
+
 }
