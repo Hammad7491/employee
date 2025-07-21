@@ -3,226 +3,142 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Smart Identity Lookup</title>
-  <link rel="icon" href="{{ asset('asset/images/favicon/favicon.png') }}">
-
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
-
-  <!-- Styles -->
+  <title>CNP Verification - Personal Numeric Code Validation</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: 'Inter', sans-serif;
-      background: url('{{ asset("asset/images/background/bg-6.jpg") }}') no-repeat center center / cover;
-      height: 100vh;
-      color: #fff;
-      overflow-y: auto;
-      position: relative;
+      background-color: #f8f9fa;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
-
-    .overlay {
-      position: absolute; top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.75);
-      z-index: 1;
-    }
-
-    .container {
-      position: relative; z-index: 2;
-      min-height: 100vh;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      padding: 30px; text-align: center;
-    }
-
-    .top-right {
-      position: absolute; top: 25px; right: 40px; z-index: 3;
-    }
-
-    .login-btn {
-      padding: 10px 25px; font-size: 1rem; font-weight: 600;
-      background: transparent; color: #fff;
-      border: 2px solid #fff; border-radius: 30px;
-      text-decoration: none; transition: all 0.3s ease;
-    }
-    .login-btn:hover { background-color: #fff; color: #333; }
-
-    .title {
-      font-size: 2.8rem; font-weight: 700; margin-bottom: 15px;
-    }
-
-    .subtitle {
-      font-size: 1.1rem; font-weight: 400;
-      line-height: 1.6; color: #ddd;
-      margin-bottom: 40px; max-width: 700px;
-    }
-
-    .input-wrapper {
-      display: flex; max-width: 600px; width: 100%;
-      border-radius: 12px; overflow: hidden;
-      box-shadow: 0 5px 20px rgba(255, 255, 255, 0.15);
+    .container { max-width: 900px; margin-top: 60px; }
+    .code-box {
       background-color: #fff;
-    }
-
-    .input-wrapper input {
-      flex: 1; padding: 16px 20px;
-      font-size: 1rem; border: none; outline: none;
-      background-color: #fff; color: #333;
-    }
-
-    .input-wrapper button {
-      padding: 0 30px;
-      background-color: #ff6a3d;
-      color: #fff; border: none;
-      font-weight: 600; font-size: 1rem;
-      cursor: pointer; transition: all 0.3s ease;
-    }
-
-    .input-wrapper button:hover {
-      background-color: #e2572e;
-    }
-
-    #errorMsg {
-      color: #ffbbbb;
-      margin-top: 12px;
-      font-size: 0.95rem;
-      display: none;
-    }
-
-    #personResult {
-      margin-top: 40px;
-      text-align: left;
-      max-width: 600px;
-      width: 100%;
-      background: #fff;
-      color: #333;
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
       padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
-      display: none;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     }
-
-    #personResult h3 {
-      margin-bottom: 15px;
-      font-size: 1.5rem;
-      color: #ff6a3d;
+    .result-box {
+      background-color: #e6ffed;
+      border-left: 5px solid #28a745;
+      padding: 20px;
+      margin-top: 30px;
+      border-radius: 6px;
     }
-
-    #personResult p {
-      margin: 5px 0;
-      font-size: 1rem;
+    .error-box {
+      background-color: #ffe6e6;
+      border-left: 5px solid #dc3545;
+      padding: 20px;
+      margin-top: 30px;
+      border-radius: 6px;
     }
-
-    @media (max-width: 600px) {
-      .title { font-size: 2rem; }
-      .subtitle { font-size: 0.95rem; }
-
-      .input-wrapper {
-        flex-direction: column; border-radius: 10px;
-      }
-
-      .input-wrapper input,
-      .input-wrapper button {
-        width: 100%; border-radius: 0;
-      }
-
-      .input-wrapper button {
-        padding: 14px; border-radius: 0 0 10px 10px;
-      }
-
-      #personResult {
-        font-size: 0.95rem;
-      }
+    .code-sample {
+      font-family: monospace;
+      background-color: #f1f1f1;
+      padding: 8px 12px;
+      border-radius: 4px;
+      display: inline-block;
     }
+    h2, h4 { color: #2c3e50; }
+    .info-table td {
+      padding: 8px 12px;
+      border-bottom: 1px solid #dee2e6;
+    }
+    .info-table td:first-child { font-weight: 600; }
   </style>
 </head>
 <body>
-
-  <!-- 🔒 Login Button -->
-  <div class="top-right">
-    <a href="/login" class="login-btn">Login</a>
-  </div>
-
-  <!-- 🌫 Overlay -->
-  <div class="overlay"></div>
-
-  <!-- 🔍 Main Content -->
   <div class="container">
-    <div class="title">Make The Best Landing<br />in The Market</div>
-    <div class="subtitle">
-      We are LeData agency, our strategists will help you set an objective and choose your tools,
-      developing a plan that is custom built for your business.
+    <h2 class="text-center mb-4">CNP Verification - Personal Numeric Code Validation</h2>
+
+    <div class="code-box">
+      <form method="POST" action="{{ route('search.person') }}" id="cnpForm">
+        @csrf
+        <div class="mb-3">
+          <label class="form-label">🔍 CNP to be validated *</label>
+          <input type="text"
+                 name="unique_id"
+                 maxlength="13"
+                 class="form-control"
+                 placeholder="Enter your CNP"
+                 required
+                 inputmode="numeric"
+                 pattern="[0-9]*"
+                 oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 13);"
+                 id="cnpInput"
+          >
+        </div>
+        <button type="submit" class="btn btn-primary">Validate your CNP</button>
+      </form>
     </div>
 
-    <form id="uniqueIdForm">
-      <div class="input-wrapper">
-        <input type="text" id="uniqueIdInput" placeholder="Enter Your 12-Digit Unique ID" maxlength="12" required />
-        <button type="submit">Search Now →</button>
-      </div>
-      <div id="errorMsg">Please enter exactly 12 digits.</div>
-    </form>
+    @if(session('cnp_error'))
+    <div class="error-box">
+      <h4 class="text-danger fw-bold">The CNP must contain 13 digits!</h4>
+      <table class="w-100 info-table mt-3">
+        <tr><td>Sex:</td><td>{{ session('cnp_data.sex') ?? '' }}</td></tr>
+        <tr><td>Year:</td><td>{{ session('cnp_data.year') ?? 0 }}</td></tr>
+        <tr><td>Month:</td><td>{{ session('cnp_data.month') ?? 0 }}</td></tr>
+        <tr><td>Day:</td><td>{{ session('cnp_data.day') ?? 0 }}</td></tr>
+        <tr><td>County:</td><td>{{ session('cnp_data.county') ?? '' }}</td></tr>
+        <tr><td>Registration code:</td><td>{{ session('cnp_data.registration_code') ?? '' }}</td></tr>
+        <tr><td>Control code:</td><td>{{ session('cnp_data.control_code') ?? 0 }}</td></tr>
+      </table>
+    </div>
+    @elseif(session('cnp_data'))
+    <div class="result-box">
+      <h4>The CNP is valid! ✅</h4>
+      <table class="w-100 info-table mt-3">
+        <tr><td>Sex:</td><td>{{ session('cnp_data.sex') }}</td></tr>
+        <tr><td>Year:</td><td>{{ session('cnp_data.year') }}</td></tr>
+        <tr><td>Month:</td><td>{{ session('cnp_data.month') }}</td></tr>
+        <tr><td>Day:</td><td>{{ session('cnp_data.day') }}</td></tr>
+        <tr><td>County:</td><td>{{ session('cnp_data.county') }}</td></tr>
+        <tr><td>Registration code:</td><td>{{ session('cnp_data.registration_code') }}</td></tr>
+        <tr><td>Control code:</td><td>{{ session('cnp_data.control_code') }}</td></tr>
+      </table>
+    </div>
+    @elseif(session('verified'))
+    <div class="result-box">
+      <h4 class="text-success">✅ Verified</h4>
+    </div>
+    @endif
 
-    <div id="personResult"></div>
+    <hr class="my-5">
+
+    <h4>CNP Validation</h4>
+    <p>
+      The validation of any CNP is done by <strong>calculating the check digit</strong>. The algorithm uses:
+      <code class="code-sample">279146358279</code> constant value.
+    </p>
+    <p>
+      If the sum of the multiplication of the CNP digits with this constant modulus 11 is equal to the last digit, the CNP is valid.
+    </p>
+    <p class="mt-3">Example:</p>
+    <div class="code-sample mb-2">299021946900</div><br>
+    <div class="code-sample">279146358279</div>
+
+    <p class="mt-4">If 775 is mod 11 == 0 → <strong>Control is valid ✅</strong></p>
+
+    <h4 class="mt-5">What does each number in the CNP mean?</h4>
+    <table class="table table-bordered mt-3">
+      <tr><td>The first digit</td><td>represents the person's gender and century.</td></tr>
+      <tr><td>Digits 2-3</td><td>represent the year of birth.</td></tr>
+      <tr><td>Digits 4-5</td><td>represent the month of birth.</td></tr>
+      <tr><td>Digits 6-7</td><td>represent the day of birth.</td></tr>
+      <tr><td>Digits 8-9</td><td>represent the county of birth.</td></tr>
+      <tr><td>Digits 10-12</td><td>serial code (people born same day in same county).</td></tr>
+      <tr><td>Digit 13</td><td>represents the check digit.</td></tr>
+    </table>
   </div>
 
-  <!-- ✅ JS Script -->
   <script>
-    const form = document.getElementById('uniqueIdForm');
-    const input = document.getElementById('uniqueIdInput');
-    const error = document.getElementById('errorMsg');
-    const resultDiv = document.getElementById('personResult');
-
-    form.addEventListener('submit', async function(e) {
-      e.preventDefault();
-      const uniqueId = input.value.trim();
-
-      if (!/^\d{12}$/.test(uniqueId)) {
-        error.style.display = 'block';
-        resultDiv.style.display = 'none';
-        return;
-      }
-
-      error.style.display = 'none';
-
-      try {
-        const response = await fetch("{{ route('search.person') }}", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-CSRF-TOKEN": "{{ csrf_token() }}"
-          },
-          body: JSON.stringify({ unique_id: uniqueId })
-        });
-
-        const data = await response.json();
-
-        if (data.status === "success" && data.data) {
-          const p = data.data;
-          resultDiv.innerHTML = `
-            <h3>Person Details</h3>
-            <p><strong>Name:</strong> ${p.name}</p>
-            <p><strong>Gender:</strong> ${p.gender}</p>
-            <p><strong>Age:</strong> ${p.age}</p>
-            <p><strong>Company:</strong> ${p.company}</p>
-          `;
-        } else {
-          resultDiv.innerHTML = `
-            <p style="color: #00c774; font-weight: bold; font-size: 1.3rem;">
-              ✅ Verified
-            </p>
-          `;
-        }
-
-        resultDiv.style.display = 'block';
-
-      } catch (error) {
-        console.error("Fetch error:", error);
-        resultDiv.innerHTML = `<p style="color:red;">Server error. Please try again later.</p>`;
-        resultDiv.style.display = 'block';
-      }
+    // Clear input after form is submitted
+    const form = document.getElementById('cnpForm');
+    const input = document.getElementById('cnpInput');
+    form.addEventListener('submit', function () {
+      setTimeout(() => input.value = '', 150);
     });
   </script>
-
 </body>
 </html>

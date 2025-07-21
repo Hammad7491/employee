@@ -16,11 +16,11 @@
 
       {{-- Real-time Search --}}
       <div class="row mb-4">
-        <div class="col-md-6">
-          <input type="text" id="searchInput" class="form-control form-control-lg rounded-3 shadow-sm"
-                 placeholder="🔍 Search by name...">
-        </div>
-      </div>
+  <div class="col-md-6">
+    <input type="text" id="searchInput" class="form-control form-control-lg rounded-3 shadow-sm"
+           placeholder="🔍 Search by county...">
+  </div>
+</div>
 
       {{-- Success Message --}}
       @if(session('success'))
@@ -34,11 +34,15 @@
             <thead class="table-light">
               <tr>
                 <th>#</th>
-                <th>Full Name</th>
+                
                 <th>Unique ID</th>
                 <th>Gender</th>
-                <th>Age</th>
-                <th>Company</th>
+                <th>Year</th>
+                <th>Month</th>
+                <th>Day</th>
+                <th>County</th>
+                <th>Reg Code</th>
+                <th>Control Code</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -46,11 +50,15 @@
               @foreach($people as $index => $person)
               <tr>
                 <td>{{ $index + 1 }}</td>
-                <td class="person-name">{{ $person->name }}</td>
-                <td>{{ $person->unique_id }}</td>
+                
+                <td class="person-id">{{ $person->unique_id }}</td>
                 <td>{{ $person->gender }}</td>
-                <td>{{ $person->age }}</td>
-                <td>{{ $person->company }}</td>
+                <td>{{ $person->year }}</td>
+                <td>{{ $person->month }}</td>
+                <td>{{ $person->day }}</td>
+                <td class="person-county">{{ $person->county }}</td>
+                <td>{{ $person->registration_code }}</td>
+                <td>{{ $person->control_code }}</td>
                 <td>
                   <a href="{{ route('admin.people.edit', $person->id) }}" class="btn btn-sm btn-primary rounded-pill shadow-sm">
                     <i class="bi bi-pencil-square"></i> Edit
@@ -74,7 +82,7 @@
         <p class="text-muted text-center fs-5">No people found.</p>
       @endif
 
-      {{-- ✅ Add New Person Button Below --}}
+      {{-- ✅ Add New Person Button --}}
       <div class="text-end mt-4">
         <a href="{{ route('admin.people.create') }}" class="btn btn-success btn-lg shadow-sm rounded-3">
           <i class="bi bi-person-plus-fill me-1"></i> Add New Person
@@ -85,15 +93,15 @@
   </div>
 </div>
 
-{{-- ✅ JS for Live Filter --}}
+{{-- ✅ JS for Live Search --}}
 <script>
   document.getElementById("searchInput").addEventListener("keyup", function () {
     const input = this.value.toLowerCase();
     const rows = document.querySelectorAll("#peopleTable tbody tr");
 
     rows.forEach(row => {
-      const name = row.querySelector(".person-name").textContent.toLowerCase();
-      row.style.display = name.includes(input) ? "" : "none";
+      const county = row.querySelector(".person-county").textContent.toLowerCase();
+      row.style.display = county.includes(input) ? "" : "none";
     });
   });
 </script>

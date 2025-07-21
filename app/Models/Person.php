@@ -1,7 +1,5 @@
 <?php
 
-// app/Models/Person.php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -17,5 +15,11 @@ class Person extends Model
         'gender',
         'age',
         'company',
+        'year',
+        'month',
+        'day',
+        'county',
+        'registration_code',
+        'control_code',
     ];
 }

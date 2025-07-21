@@ -9,11 +9,20 @@ return new class extends Migration {
     {
         Schema::create('people', function (Blueprint $table) {
             $table->id();
-            $table->string('unique_id', 12)->unique(); // 12-digit unique ID
-            $table->string('name');
+            $table->string('unique_id', 13)->unique(); // Now 13 digits as per latest request
+           
             $table->enum('gender', ['Male', 'Female', 'Other']);
-            $table->unsignedTinyInteger('age');
-            $table->string('company');
+            
+           
+
+            // 🆕 Newly added fields
+            $table->year('year')->nullable();
+            $table->unsignedTinyInteger('month')->nullable();
+            $table->unsignedTinyInteger('day')->nullable();
+            $table->string('county')->nullable();
+            $table->string('registration_code')->nullable();
+            $table->string('control_code')->nullable();
+
             $table->timestamps();
         });
     }
