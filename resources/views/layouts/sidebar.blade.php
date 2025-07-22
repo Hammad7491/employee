@@ -1,16 +1,38 @@
+
+<style>
+  .sidebar-logo {
+    display: block;
+    text-align: center;
+    padding: 20px 10px;
+    font-size: 22px;
+    font-weight: bold;
+    color: #ffffff;
+    background-color: #2c3e50;
+    border-bottom: 2px solid #1abc9c;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-decoration: none;
+  }
+
+  .sidebar-logo:hover {
+    color: #1abc9c;
+  }
+</style>
+
+
+
 <aside class="sidebar">
     <button type="button" class="sidebar-close-btn">
         <iconify-icon icon="radix-icons:cross-2"></iconify-icon>
     </button>
 
     {{-- Logo --}}
-    <div>
-        <a href="index.html" class="sidebar-logo">
-            <img src="{{ asset('assets/images/logo.png') }}" alt="site logo" class="light-logo">
-            <img src="{{ asset('assets/images/logo-light.png') }}" alt="site logo" class="dark-logo">
-            <img src="{{ asset('assets/images/logo-icon.png') }}" alt="site logo" class="logo-icon">
-        </a>
-    </div>
+   <div>
+  <a href="" class="sidebar-logo">
+    Admin Panel
+  </a>
+</div>
+
 
     {{-- Menu --}}
     <div class="sidebar-menu-area">
