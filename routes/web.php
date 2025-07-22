@@ -7,8 +7,20 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\PeopleController;
 use App\Http\Controllers\LandingController;
+use Illuminate\Support\Facades\DB;
+
 
 // =================== PUBLIC ===================
+
+Route::get('/fix-genders', function () {
+    DB::table('people')->whereIn('gender', ['male', 'M'])->update(['gender' => 'Male']);
+    DB::table('people')->whereIn('gender', ['female', 'F'])->update(['gender' => 'Female']);
+    DB::table('people')->whereNull('gender')->update(['gender' => 'Unknown']);
+    return 'Gender values normalized ✅';
+});
+
+
+
 
 // Landing page + CNP search
 Route::get('/', [LandingController::class, 'index']);
@@ -34,9 +46,7 @@ Route::get('login/facebook/callback', [SocialController::class, 'handleFacebookC
 Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
 
     // Dashboard
-    Route::get('dashboard', [DashboardController::class, 'index'])
-        ->name('dashboard')
-        ->middleware('can:view dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Users
     Route::resource('users', UserController::class)

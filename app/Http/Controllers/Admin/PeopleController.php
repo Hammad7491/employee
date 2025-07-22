@@ -32,26 +32,28 @@ class PeopleController extends Controller
     }
 
     // Store new person
-    public function store(Request $request)
-    {
-        $request->validate([
-            'unique_id'         => 'required|digits:13|unique:people,unique_id',
-            'year'              => 'required|integer|digits:4',
-            'month'             => 'required|integer|min:1|max:12',
-            'day'               => 'required|integer|min:1|max:31',
-            'county'            => 'required|string|max:255',
-            'registration_code' => 'required|integer',
-            'control_code'      => 'required|integer',
-        ]);
+   public function store(Request $request)
+{
+    $request->validate([
+        'unique_id'         => 'required|digits:13|unique:people,unique_id',
+        'year'              => 'required|integer|digits:4',
+        'month'             => 'required|integer|min:1|max:12',
+        'day'               => 'required|integer|min:1|max:31',
+        'county'            => 'required|string|max:255',
+        'registration_code' => 'required|integer',
+        'control_code'      => 'required|integer',
+        'gender'            => 'required|in:Male,Female' // ✅ validate gender too
+    ]);
 
-        Person::create($request->only([
-            'unique_id', 'year', 'month', 'day', 'county',
-            'registration_code', 'control_code'
-        ]));
+    Person::create($request->only([
+        'unique_id', 'year', 'month', 'day', 'county',
+        'registration_code', 'control_code', 'gender' // ✅ now include gender
+    ]));
 
-        return redirect()->route('admin.people.index')
-                         ->with('success', 'Person added successfully.');
-    }
+    return redirect()->route('admin.people.index')
+                     ->with('success', 'Person added successfully.');
+}
+
 
     // Show edit form
     public function edit($id)
