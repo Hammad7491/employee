@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', 'Add Peoples')
 @section('content')
 <div class="container py-5">
   <div class="card shadow border-0 rounded-5 overflow-hidden" style="background-color: #f8f9fa;">

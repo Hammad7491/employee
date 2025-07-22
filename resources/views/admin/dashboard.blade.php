@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', 'Admin Dashboard')
 @section('content')
 <div class="container py-5">
     {{-- Total People Card --}}
