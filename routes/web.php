@@ -20,6 +20,14 @@ Route::get('/fix-genders', function () {
 });
 
 
+// Profile
+Route::get('admin/profile',   [UserController::class, 'profile'])
+     ->name('admin.profile.edit');
+Route::post('admin/profile',  [UserController::class, 'updateProfile'])
+     ->name('admin.profile.update');
+
+
+
 
 
 // Landing page + CNP search
