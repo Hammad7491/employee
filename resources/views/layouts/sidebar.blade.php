@@ -60,11 +60,7 @@
               <i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> People List
             </a>
           </li>
-          <li>
-            <a href="{{ route('admin.change-password.form') }}">
-              <i class="ri-lock-password-line text-primary-600 w-auto"></i> Change Password
-            </a>
-          </li>
+          
         </ul>
       </li>
 
